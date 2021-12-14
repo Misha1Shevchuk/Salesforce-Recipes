@@ -7,6 +7,10 @@ export default class MultiSelectPicklist extends LightningElement {
     @api hidePills = false;
     @api disabled = 'false';
     @api variant; // Available options are 'label-hidden', 'label-inline'
+<<<<<<< HEAD
+=======
+    @api errorMessage = 'Enter a value.';
+>>>>>>> c187fad94122613eca5cd1966a352bd236bdc09d
 
     @track selectedValues = [];
 
