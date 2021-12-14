@@ -1,43 +1,73 @@
-import {LightningElement, track, api} from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 
 export default class MultiSelectPicklist extends LightningElement {
 
     @api options = [];
-    @api label;
+    @api label = '';
     @api hidePills = false;
-    @api variant; // Use 'label-hidden' to hide label;
+    @api disabled = 'false';
+    @api variant; // Available options are 'label-hidden', 'label-inline'
+    @api errorMessage = 'Enter a value.';
 
     @track selectedValues = [];
+
     showDropdown = false;
     _clickOutsideHandler;
 
     connectedCallback() {
-        this.options.forEach(element => element.selected ? this.selectedValues.push(element.value) : '');
+        this.validateOptions();
+        this.updateFormElementClassList();
+        this.updateSelectedValues(this.options);
+    }
+
+    validateOptions() {
+        if (!Array.isArray(this.options)) {
+            console.error('options value is: ', JSON.stringify(this.options));
+            throw new Error(`options type is "${typeof this.options}" but must be "array"`);
+        }
+        for (let option of this.options) {
+            if (!option.hasOwnProperty('label') || !option.hasOwnProperty('value')) {
+                throw new Error('Each option must have both "label" and "value" property');
+            }
+        }
+    }
+
+    updateFormElementClassList() {
+        this.classList.add("slds-form-element");
+        if (this.variant === 'label-inline') {
+            this.classList.add('slds-form-element_horizontal');
+        }
+    }
+
+    updateSelectedValues(options) {
+        this.selectedValues = [];
+
+        for (let option of options) {
+            if (option.selected) {
+                this.selectedValues.push(option.value);
+            }
+        }
     }
 
     fetchSelectedValues() {
-        this.selectedValues = [];
-
-        this.template.querySelectorAll('c-picklist-value').forEach(picklistValue => {
-            if (picklistValue.selected) {
-                this.selectedValues.push(picklistValue.value);
-            }
-        });
-
+        this.updateSelectedValues(this.template.querySelectorAll('c-picklist-value'));
         this.refreshOriginalList();
     }
 
     refreshOriginalList() {
-        const picklistValues = this.options.map(eachvalue => ({...eachvalue}));
+        const picklistValues = JSON.parse(JSON.stringify(this.options));
 
-        picklistValues.forEach((element, index) => {
-            picklistValues[index].selected = this.selectedValues.includes(element.value);
-        });
+        for (const picklistValue of picklistValues) {
+            picklistValue.selected = this.selectedValues.includes(picklistValue.value);
+        }
 
         this.options = picklistValues;
     }
 
     handleShowDropdown() {
+        if (this.isDisabled) {
+            return;
+        }
         if (this.showDropdown) {
             this.fetchSelectedValues();
         }
@@ -58,8 +88,7 @@ export default class MultiSelectPicklist extends LightningElement {
 
     closePill(event) {
         const selection = event.target.dataset.value;
-        const selectedPills = this.selectedValues;
-        const pillIndex = selectedPills.indexOf(selection);
+        const pillIndex = this.selectedValues.indexOf(selection);
         this.selectedValues.splice(pillIndex, 1);
 
         this.refreshOriginalList();
@@ -76,7 +105,11 @@ export default class MultiSelectPicklist extends LightningElement {
     }
 
     notifyParent() {
-        this.dispatchEvent(new CustomEvent('change', {detail: {selected: this.selectedValues}}));
+        this.dispatchEvent(new CustomEvent('change', { detail: { selected: this.selectedValues } }));
+    }
+
+    normalizeBoolean(value) {
+        return String(value).toLowerCase() == 'true';
     }
 
     get selectedMessage() {
@@ -89,5 +122,9 @@ export default class MultiSelectPicklist extends LightningElement {
 
     get isLabelHidden() {
         return this.variant === 'label-hidden';
+    }
+
+    get isDisabled() {
+        return this.normalizeBoolean(this.disabled);
     }
 }

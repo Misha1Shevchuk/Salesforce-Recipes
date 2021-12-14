@@ -4,13 +4,11 @@
              role="option" onclick={handleSelect} id="option">
 
             <span class="slds-media__figure slds-listbox__option-icon">
-                <template if:true={selected}>
-                    <span class="slds-icon_container slds-icon-utility-check slds-current-color">
-                        <lightning-icon class="slds-p-top_xxx-small" icon-name="utility:check" title="Selected"
-                                        size="x-small" alternative-text="Selected">
-                        </lightning-icon>
-                    </span>
-                </template>
+                <span if:true={selected} class="slds-icon_container slds-icon-utility-check slds-current-color">
+                    <lightning-icon class="slds-p-top_xxx-small" icon-name="utility:check" title="Selected"
+                                    size="x-small" alternative-text="Selected">
+                    </lightning-icon>
+                </span>
             </span>
 
             <span class="slds-media__body">
