@@ -1,0 +1,15 @@
+<template>
+    <lightning-card title="Sandbox">
+        <div class="slds-var-p-horizontal_small">
+            <c-multi-select-picklist if:true={statusOptions.data} 
+                                     label="Status"
+                                     required="true"
+                                     disabled="false"
+                                     options={statusOptions.data.values}
+                                     onchange={handleChange}>
+            </c-multi-select-picklist>
+
+            <lightning-input label="test" variant="label-inline"></lightning-input>
+        </div>
+    </lightning-card>
+</template>
