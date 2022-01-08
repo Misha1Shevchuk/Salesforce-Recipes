@@ -5,7 +5,7 @@ export default class MultiSelectPicklist extends LightningElement {
     @api options = [];
     @api label = '';
     @api hidePills = false;
-    @api disabled = 'false';
+    @api disabled = false;
     @api variant; // Available options are 'label-hidden', 'label-inline'
 
     @track selectedValues = [];
@@ -64,7 +64,7 @@ export default class MultiSelectPicklist extends LightningElement {
     }
 
     handleShowDropdown() {
-        if (this.isDisabled) {
+        if (this.disabled) {
             return;
         }
         if (this.showDropdown) {
@@ -107,23 +107,15 @@ export default class MultiSelectPicklist extends LightningElement {
         this.dispatchEvent(new CustomEvent('change', { detail: { selected: this.selectedValues } }));
     }
 
-    normalizeBoolean(value) {
-        return String(value).toLowerCase() == 'true';
-    }
-
     get selectedMessage() {
         return this.selectedValues.length + ' values are selected';
     }
 
     get showPillsSection() {
-        return this.hidePills || this.selectedValues.length > 0;
+        return !this.hidePills && this.selectedValues.length > 0;
     }
 
     get isLabelHidden() {
         return this.variant === 'label-hidden';
-    }
-
-    get isDisabled() {
-        return this.normalizeBoolean(this.disabled);
     }
 }
