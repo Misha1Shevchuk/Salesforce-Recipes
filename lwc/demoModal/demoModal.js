@@ -1,6 +1,6 @@
 import { LightningElement } from 'lwc';
 
-export default class Modal extends LightningElement {
+export default class DemoModal extends LightningElement {
 
     displayModal = false;
 

@@ -3,7 +3,7 @@ import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import CASE_OBJECT from '@salesforce/schema/Case';
 import STATUS_FIELD from '@salesforce/schema/Case.Status';
 
-export default class MultiSelectPicklist extends LightningElement {
+export default class DemoMultiSelectPicklist extends LightningElement {
 
     @wire(getObjectInfo, {objectApiName: CASE_OBJECT}) caseInfo;
     @wire(getPicklistValues, {recordTypeId: '$caseInfo.data.defaultRecordTypeId', fieldApiName: STATUS_FIELD}) 
