@@ -63,12 +63,10 @@ export default class Lookup extends LightningElement {
             this.selectNextItem();
         } else if (pressedKeyCode === KEY_CODE_ARROW_UP) {
             this.selectPrevItem();
-        } else if (pressedKeyCode === KEY_CODE_ENTER) {
-            if (this.selectedOptionIndex != null) {
-                this.selectedRecord = this.options[this.selectedOptionIndex];
-                this.notifyParentAboutLookupUpdate(this.selectedRecord);
-                this.handleHideDropdown();
-            }
+        } else if (pressedKeyCode === KEY_CODE_ENTER && this.selectedOptionIndex != null) {
+            this.selectedRecord = this.options[this.selectedOptionIndex];
+            this.notifyParentAboutLookupUpdate(this.selectedRecord);
+            this.handleHideDropdown();
         }
     }
 
