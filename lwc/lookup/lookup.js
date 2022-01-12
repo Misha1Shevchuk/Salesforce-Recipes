@@ -37,17 +37,16 @@ export default class Lookup extends LightningElement {
 
     @wire(findRecords, { searchKey: '$searchKey', sObjectApiName: '$objectApiName', fieldToQuery: '$fieldToQuery' })
     searchResult({ data, error }) {
-        this.showSpinner = false;
         if (data) {
-            this.hasRecords = data.length > 0;
             this.options = JSON.parse(JSON.stringify(data));
+            this.hasRecords = this.options.length > 0;
             this.selectedOptionIndex = null;
         } else if (error) {
             console.error(error);
         }
     };
 
-    handleKeyChange(event) {
+    handleInputChange(event) {
         clearTimeout(this._delayTimeout);
 
         this.showSpinner = true;
@@ -141,7 +140,7 @@ export default class Lookup extends LightningElement {
     }
 
     notifyParentAboutLookupUpdate(selectedRecord) {
-        this.dispatchEvent(new CustomEvent('lookupupdate', { detail: { selectedRecord } }));
+        this.dispatchEvent(new CustomEvent('change', { detail: { selectedRecord } }));
     }
 
     addClickOutsideListener() {

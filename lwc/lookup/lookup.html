@@ -6,8 +6,7 @@
             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
                 
                 <div if:false={selectedRecord.id}>
-
-                    <lightning-input type="search" onclick={handleShowDropdown} onchange={handleKeyChange}
+                    <lightning-input type="search" onclick={handleShowDropdown} onchange={handleInputChange}
                         onkeydown={handleKeyDown} is-loading={showSpinner} value={searchKey} variant="label-hidden"
                         placeholder={placeholder}>
                     </lightning-input>
