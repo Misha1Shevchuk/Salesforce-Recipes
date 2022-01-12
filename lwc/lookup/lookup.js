@@ -37,6 +37,7 @@ export default class Lookup extends LightningElement {
 
     @wire(findRecords, { searchKey: '$searchKey', sObjectApiName: '$objectApiName', fieldToQuery: '$fieldToQuery' })
     searchResult({ data, error }) {
+        this.showSpinner = false;
         if (data) {
             this.options = JSON.parse(JSON.stringify(data));
             this.hasRecords = this.options.length > 0;
