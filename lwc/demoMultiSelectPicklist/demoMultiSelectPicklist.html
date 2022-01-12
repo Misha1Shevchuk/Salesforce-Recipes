@@ -1,13 +1,5 @@
 <template>
-    <lightning-card title="Sandbox">
-        <div class="slds-var-p-horizontal_small">
-            <c-multi-select-picklist if:true={statusOptions.data} 
-                                     label="Status"
-                                     disabled
-                                     hide-pills
-                                     options={statusOptions.data.values}
-                                     onchange={handleChange}>
-            </c-multi-select-picklist>
-        </div>
-    </lightning-card>
+    <c-multi-select-picklist if:true={statusOptions.data} label="Status" hide-pills
+        options={statusOptions.data.values} onchange={handleChange}>
+    </c-multi-select-picklist>
 </template>
