@@ -1,6 +1,6 @@
 public class LookupController {
 
-    final static Integer MAX_ITEMS_TO_QUERY = 5;
+    @TestVisible final static Integer MAX_ITEMS_TO_QUERY = 5;
 
     @AuraEnabled(cacheable=true)
     public static List<LookupResultWrapper> findRecords(String searchKey , String sObjectApiName, String fieldToQuery) {    
