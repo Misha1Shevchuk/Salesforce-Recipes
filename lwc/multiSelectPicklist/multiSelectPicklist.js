@@ -19,6 +19,10 @@ export default class MultiSelectPicklist extends LightningElement {
         this.updateSelectedValues(this.options);
     }
 
+    disconnectedCallback() {
+        this.removeClickOutsideListener();
+    }
+
     validateOptions() {
         if (!Array.isArray(this.options)) {
             console.error('options value is: ', JSON.stringify(this.options));

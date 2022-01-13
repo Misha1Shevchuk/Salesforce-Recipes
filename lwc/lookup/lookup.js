@@ -35,6 +35,10 @@ export default class Lookup extends LightningElement {
         }
     }
 
+    disconnectedCallback() {
+        this.removeClickOutsideListener();
+    }
+
     @wire(findRecords, { searchKey: '$searchKey', sObjectApiName: '$objectApiName', fieldToQuery: '$fieldToQuery' })
     searchResult({ data, error }) {
         this.showSpinner = false;
