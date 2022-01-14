@@ -1,6 +1,6 @@
 <template>
     <div class="slds-combobox_container slds-has-selection">
-        <label class="slds-form-element__label" for="combobox-id-1">{label}</label>
+        <label if:false={isLabelHidden} class="slds-form-element__label" for="combobox-id-1">{label}</label>
         <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" aria-expanded="false"
             aria-haspopup="listbox" role="combobox">
             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
@@ -24,14 +24,14 @@
                         title="Remove selected option">
                         <label class="slds-hidden"></label>
                         <lightning-icon icon-name="utility:close" size="x-small" alternative-text="close icon"
-                            onclick={handleRemove}>
+                            onclick={handleClearSelection}>
                         </lightning-icon>
                     </button>
                 </div>
             </div>
 
             <div if:true={isDropdownVisible} id="listbox-id-5"
-                class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid " role="listbox">
+                class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
                 <ul class="slds-listbox slds-listbox_vertical" role="presentation">
 
                     <template for:each={options} for:item="option">
@@ -46,7 +46,7 @@
                                     </span>
                                 </span>
                                 <span class="slds-media__body">
-                                    <span class="slds-listbox__option-text slds-listbox__option-text_entity">
+                                    <span class="slds-listbox__option-text_entity">
                                         {option.title}
                                     </span>
                                 </span>
