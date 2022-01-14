@@ -16,6 +16,7 @@ export default class Lookup extends LightningElement {
     @api objectApiName = 'Account';
     @api fieldToQuery = 'Name';
     @api defaultRecordId = '';
+    @api variant; // Available option is 'label-hidden'
 
     options = [];
     hasRecords = true;
@@ -28,11 +29,13 @@ export default class Lookup extends LightningElement {
     _delayTimeout;
     _clickOutsideHandler;
 
+    get isLabelHidden() {
+        return this.variant === 'label-hidden';
+    }
+
     connectedCallback() {
-        this.classList.add('slds-form-element');
-        if (this.defaultRecordId) {
-            this.fetchRecordById(this.defaultRecordId);
-        }
+        this.addFormElementCssClass();
+        this.fetchDefaultRecord();
     }
 
     disconnectedCallback() {
@@ -47,13 +50,12 @@ export default class Lookup extends LightningElement {
             this.hasRecords = this.options.length > 0;
             this.selectedOptionIndex = null;
         } else if (error) {
-            console.error(error);
+            this.handleError(error);
         }
-    };
+    }
 
     handleInputChange(event) {
         clearTimeout(this._delayTimeout);
-
         this.showSpinner = true;
         const searchKey = event.target.value;
         this._delayTimeout = setTimeout(() => this.searchKey = searchKey, CALLOUT_DELAY);
@@ -76,20 +78,18 @@ export default class Lookup extends LightningElement {
     }
 
     handleShowDropdown() {
-        if (!this.isDropdownVisible) {
-            this.isDropdownVisible = true;
-            this.addClickOutsideListener();
-        }
+        if (this.isDropdownVisible) return;
+        this.addClickOutsideListener();
+        this.isDropdownVisible = true;
     }
 
     handleHideDropdown() {
-        if (this.isDropdownVisible) {
-            this.isDropdownVisible = false;
-            this.removeClickOutsideListener();
-        }
+        if (!this.isDropdownVisible) return;
+        this.removeClickOutsideListener();
+        this.isDropdownVisible = false;
     }
 
-    handleRemove() {
+    handleClearSelection() {
         this.searchKey = '';
         this.selectedRecord = {};
         this.notifyParentAboutLookupUpdate(null);
@@ -107,39 +107,43 @@ export default class Lookup extends LightningElement {
         this.handleHideDropdown();
     }
 
-    async fetchRecordById(recordId) {
+    addFormElementCssClass() {
+        this.classList.add('slds-form-element');
+    }
+
+    async fetchDefaultRecord() {
+        if (!this.defaultRecordId) return;
         try {
-            const result = await findDefaultRecord({recordId, fieldToQuery: this.fieldToQuery});
+            const result = await findDefaultRecord({recordId: this.defaultRecordId, fieldToQuery: this.fieldToQuery});
             if (result) this.notifyParentAboutLookupUpdate(this.selectedRecord = result);
         } catch (error) {
-            console.error(error);
+           this.handleError(error);
         }
     }
 
     selectNextItem() {
-        this.template.querySelector('[role="option"]').focus();
-        const optionElements = this.template.querySelectorAll('[role="option"]');
-        if (optionElements.length) {
-            optionElements.forEach(elem => elem.classList.remove('slds-has-focus'));
-
-            let indexToSelect = 0;
-            if (this.selectedOptionIndex != null && this.selectedOptionIndex < optionElements.length - 1) {
-                indexToSelect = this.selectedOptionIndex + 1;
-            }
-    
-            optionElements[indexToSelect].classList.add('slds-has-focus');
-            this.selectedOptionIndex = indexToSelect;
-        }
+        this.updateIndexOfNextAvailableSelection();
+        this.selectNewOption();
     }
 
     selectPrevItem() {
-        const optionElements = this.template.querySelectorAll('[role="option"]');
-        if (optionElements.length) {
-            optionElements.forEach(elem => elem.classList.remove('slds-has-focus'));
+        this.updateIndexOfPreviousAvailableSelection();
+        this.selectNewOption();
+    }
 
-            this.selectedOptionIndex = (this.selectedOptionIndex || optionElements.length) - 1;
-            optionElements[this.selectedOptionIndex].classList.add('slds-has-focus');
-        }
+    updateIndexOfNextAvailableSelection() {
+        const isNotLast = this.selectedOptionIndex != null && this.selectedOptionIndex < this.options.length - 1;
+        this.selectedOptionIndex = isNotLast ? (this.selectedOptionIndex + 1) : 0;
+    }
+
+    updateIndexOfPreviousAvailableSelection() {
+        this.selectedOptionIndex = (this.selectedOptionIndex || this.options.length) - 1;
+    }
+
+    selectNewOption() {
+        const optionElements = this.template.querySelectorAll('[role="option"]');
+        optionElements.forEach(elem => elem.classList.remove('slds-has-focus'));
+        optionElements[this.selectedOptionIndex].classList.add('slds-has-focus');
     }
 
     notifyParentAboutLookupUpdate(selectedRecord) {
@@ -153,5 +157,9 @@ export default class Lookup extends LightningElement {
 
     removeClickOutsideListener() {
         window.removeEventListener('click', this._clickOutsideHandler);
+    }
+
+    handleError(error) {
+        console.error(error);
     }
 }
