@@ -1,7 +1,7 @@
 .close-button {
     top: var(--lwc-spacingXxSmall);
     right: var(--lwc-spacingXxSmall);
-    background-color: #fafafa;
+    background-color: #fff;
     transition: all 1s;
 }
 
