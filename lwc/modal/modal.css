@@ -1,0 +1,16 @@
+.close-button {
+    top: var(--lwc-spacingXxSmall);
+    right: var(--lwc-spacingXxSmall);
+    background-color: #fafafa;
+    transition: all 1s;
+}
+
+.close-button > lightning-icon {
+    transform: scale(80%);
+    filter: brightness(50%); 
+}
+
+.close-button:hover {
+    filter: brightness(80%);
+    border-radius: var(--lwc-borderRadiusCircle);
+}

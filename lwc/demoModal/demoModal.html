@@ -1,5 +1,7 @@
 <template>
-    <c-modal if:true={displayModal} onclose={hideModal} hide-cross-button hide-footer>
+    <lightning-button label="Show modal" onclick={showModal}></lightning-button>
+
+    <c-modal if:true={displayModal} onclose={hideModal} cross-button-inside>
         <span slot="header">Modal/PopUp Box header LWC</span>
         <div slot="content">
             <p>Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat
@@ -8,6 +10,10 @@
                 aute consequat ipsum magna exercitation reprehenderit magna. Tempor cupidatat consequat elit dolor
                 adipisicing.
             </p>
+        </div>
+        <div slot="footer">
+            <lightning-button label="Cancel" onclick={hideModal} class="slds-m-right_x-small"></lightning-button>
+            <lightning-button label="Submit" variant="brand" onclick={hideModal}></lightning-button>
         </div>
     </c-modal>
 </template>
