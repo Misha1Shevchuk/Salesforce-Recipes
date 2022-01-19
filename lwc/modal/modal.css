@@ -2,7 +2,7 @@
     top: var(--lwc-spacingXxSmall);
     right: var(--lwc-spacingXxSmall);
     background-color: #fff;
-    transition: all 1s;
+    transition: all .4s;
 }
 
 .close-button > lightning-icon {
